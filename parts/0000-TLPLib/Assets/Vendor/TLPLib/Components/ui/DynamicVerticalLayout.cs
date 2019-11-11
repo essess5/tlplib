@@ -218,7 +218,7 @@ namespace com.tinylabproductions.TLPLib.Components.ui {
               rectTrans.localPosition = Vector3.zero;
               rectTrans.anchoredPosition = cellRect.center;
               
-              if (containsSpecialItems)
+              // if (containsSpecialItems)
                 rectTrans.sizeDelta = cellRect.size;
               
               instanceOpt = instance.some();
