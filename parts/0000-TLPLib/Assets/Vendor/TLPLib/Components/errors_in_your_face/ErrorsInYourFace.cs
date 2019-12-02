@@ -90,7 +90,7 @@ namespace com.tinylabproductions.TLPLib.Components.errors_in_your_face {
       }
 
       void setVisible(bool visible) {
-        binding.gameObject.SetActive(visible);
+        if(binding) binding.gameObject.SetActive(visible);
       }
 
       public void show() => setVisible(true);
@@ -131,7 +131,7 @@ namespace com.tinylabproductions.TLPLib.Components.errors_in_your_face {
       void setText() {
         var text = entries.mkString("\n");
         if (removedMessages > 0) text += $"\nRemoved messages: {removedMessages}";
-        binding._errorsText.text = text;
+        if(binding._errorsText) binding._errorsText.text = text;
       }
 
       Color32 logTypeToColor(LogType type) {
