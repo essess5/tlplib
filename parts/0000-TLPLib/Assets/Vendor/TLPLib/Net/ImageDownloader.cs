@@ -10,6 +10,7 @@ using com.tinylabproductions.TLPLib.Logger;
 using GenerationAttributes;
 using Smooth.Dispose;
 using UnityEngine;
+using UnityEngine.Networking;
 using Object = UnityEngine.Object;
 
 namespace com.tinylabproductions.TLPLib.Net {
@@ -27,6 +28,8 @@ namespace com.tinylabproductions.TLPLib.Net {
     }
     
     public static readonly ImageDownloader instance = new ImageDownloader();
+
+    public readonly Dictionary<string, Sprite> cacheImg = new Dictionary<string, Sprite>();
 
     readonly Dictionary<Url, InternalResult> cache = new Dictionary<Url, InternalResult>();
     readonly ASyncNAtATimeQueue<Url, Either<WWWError, UsageCountedDisposable<Texture2D>>> queue;
@@ -64,6 +67,30 @@ namespace com.tinylabproductions.TLPLib.Net {
         });
       })
     );
+
+    public void DownloadImg(string url)
+    {
+      ASync.StartCoroutine(GetTexture(url));
+    }
+
+     IEnumerator GetTexture(string url) {
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
+        yield return www.SendWebRequest();
+
+        if(www.isNetworkError || www.isHttpError) {
+            Debug.Log(www.error);
+        }
+        else {
+            Texture2D myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            Sprite img = Sprite.Create(myTexture, new Rect (0, 0,myTexture.width,myTexture.height), new Vector2(0.5f,0.5f) );			
+            if(cacheImg.ContainsKey(url)){
+              cacheImg[url] = img;
+            }
+            else{
+              cacheImg.Add(url,img );
+            }
+        }
+    }
 
     // TODO: make it possible to dispose image before it started downloading / while downloading
     public Result loadImage(Url url, bool ignoreQueue = false) =>
