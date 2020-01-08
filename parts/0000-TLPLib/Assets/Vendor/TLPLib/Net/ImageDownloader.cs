@@ -70,6 +70,7 @@ namespace com.tinylabproductions.TLPLib.Net {
 
     public void DownloadImg(string url)
     {
+      Debug.Log("==== URL download " + url);
       ASync.StartCoroutine(GetTexture(url));
     }
 
@@ -83,7 +84,9 @@ namespace com.tinylabproductions.TLPLib.Net {
         else {
             Texture2D myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
             Sprite img = Sprite.Create(myTexture, new Rect (0, 0,myTexture.width,myTexture.height), new Vector2(0.5f,0.5f) );			
+            Debug.Log("==== URL download " + url);  
             if(cacheImg.ContainsKey(url)){
+              Debug.Log("==== cache download " + url);
               cacheImg[url] = img;
             }
             else{
